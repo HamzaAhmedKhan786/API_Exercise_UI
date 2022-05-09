@@ -14,14 +14,18 @@ namespace API_Exercise_UI
     public class API
     {
         private string result = string.Empty;
-        static string api_address = "https://localhost:7133/api/";
+        private string api_address = String.Empty; //"https://localhost:7133/api/";
         private User_Data login_user = new User_Data();
+        
         public API()
         {
-
+            var app_settings = System.Configuration.ConfigurationManager.AppSettings;
+            string api_url = app_settings.Get("api_url");
+            this.api_address = api_url + "/api/";
+            Console.WriteLine(this.api_address);
         }
 
-        static Object Call_Api_Without_Input(string api_name)
+        private Object Call_Api_Without_Input(string api_name)
         {
             string result_data = string.Empty;
             using (var client = new HttpClient())
@@ -67,7 +71,7 @@ namespace API_Exercise_UI
         }
 
 
-        private static async Task<T> GetAsync<T>(string api_name, string request_params)
+        private async Task<T> GetAsync<T>(string api_name, string request_params)
         {
             // Initialization.  
             string responseObj = String.Empty;
@@ -108,7 +112,7 @@ namespace API_Exercise_UI
             return result.ToString();
         }
 
-        public static async Task<T> RunAsync<T>(string api_name, string urlParameters)
+        public async Task<T> RunAsync<T>(string api_name, string urlParameters)
         {
             return await GetAsync<T>(api_name, urlParameters);
         }
